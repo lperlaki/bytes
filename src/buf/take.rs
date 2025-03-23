@@ -202,3 +202,23 @@ impl<T: Buf> Buf for Take<T> {
         cnt
     }
 }
+
+impl<T: AsRef<[u8]>> AsRef<[u8]> for Take<T> {
+    fn as_ref(&self) -> &[u8] {
+        &self.inner.as_ref()[..self.limit]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_take_as_ref() {
+        let b = &[1u8, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        let t = b.take(4);
+
+        assert_eq!(t.as_ref(), &[1, 2, 3, 4])
+    }
+}
